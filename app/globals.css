@@ -1,0 +1,506 @@
+@import "tailwindcss";
+
+:root {
+  /* Palette from the design handoff: near-black stage, cream type. */
+  --background: #111110;
+  --background-deep: #0d0d0b;
+  --tile: #161613;
+  --foreground: #e1e0cc;
+  --muted: #6f6f66;
+  --footer: #4f4f47;
+  --line: #1e1e1a;
+  --line-strong: #33332c;
+
+  /* Brand palette: Prussian Blue, Black Forest, Ash Brown, Porcelain,
+     Metallic Gold. */
+  --prussian: #011638;
+  --forest: #005200;
+  --ash-brown: #766153;
+  --porcelain: #fffdf7;
+  --gold: #deb72b;
+  --accent-green-deep: #005200;
+
+  --glow-green: rgba(0, 82, 0, 0.1);
+  --glow-brown: rgba(118, 97, 83, 0.1);
+  --glow-cream: rgba(222, 183, 43, 0.12);
+
+  --grad-accent: linear-gradient(
+    115deg,
+    #011638 0%,
+    #005200 42%,
+    #766153 68%,
+    #deb72b 100%
+  );
+  --grad-node: linear-gradient(135deg, #005200, #deb72b);
+  --grad-cta: linear-gradient(120deg, #e6c23a, #deb72b);
+
+  /* shadcn/ui token layer, mapped to the palette above so <Button> variants
+     resolve. Primary is the cream accent on near-black. */
+  --primary: #e1e0cc;
+  --primary-foreground: #111110;
+  --secondary: #1e1e1a;
+  --secondary-foreground: #e1e0cc;
+  --accent: #26261f;
+  --accent-foreground: #e1e0cc;
+  --destructive: #e5484d;
+  --destructive-foreground: #fbfbf7;
+  --input: #33332c;
+  --ring: #6f6f66;
+}
+
+/* Off-white content theme applied to the area below the dark hero — overrides
+   the palette tokens so every token-driven color flips to the light scheme. */
+.theme-light {
+  --foreground: #011638; /* Prussian Blue */
+  --muted: #766153; /* Ash Brown */
+  --tile: #ffffff;
+  --line: #e7e3d7;
+  --line-strong: #d8d2c2;
+  --footer: #a89f8c;
+  --glow-green: rgba(0, 82, 0, 0.09);
+  --glow-brown: rgba(118, 97, 83, 0.09);
+  --glow-cream: rgba(222, 183, 43, 0.13);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-background-deep: var(--background-deep);
+  --color-tile: var(--tile);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-footer: var(--footer);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent-cream: var(--accent-cream);
+  --color-accent-green: var(--accent-green);
+  --color-accent-brown: var(--accent-brown);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --font-sans: var(--font-archivo);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* These belong in `base` so Tailwind's utilities can override them — unlayered
+   rules would otherwise beat every layered utility (e.g. a link's text color). */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-archivo), Helvetica, Arial, sans-serif;
+  }
+
+  a {
+    color: var(--foreground);
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: #ffffff;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 9px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 5px;
+}
+
+@keyframes tihom-rise {
+  from {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.tihom-rise {
+  animation: tihom-rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ---------- Natural accent theme: motion + shapes ---------- */
+
+/* Scroll reveal (toggled by the Reveal component). */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition:
+    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Accent text — the cream→sage→earth gradient, gently shimmering. */
+.text-warm {
+  background: var(--grad-accent);
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: accentShift 7s ease-in-out infinite;
+}
+@keyframes accentShift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Card with a sage/earth gradient hairline border over the tile fill. */
+.warm-card {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--tile), var(--tile)) padding-box,
+    linear-gradient(135deg, rgba(0, 82, 0, 0.4), rgba(222, 183, 43, 0.22))
+      border-box;
+}
+
+/* ---------- Section bands ---------- */
+
+/* Alternating grounds down the page — porcelain, then a warmer sand. Each band
+   carries its own glows, so the seam between two sections reads as a
+   deliberate edge and needs no divider. */
+.band-cream {
+  background:
+    radial-gradient(
+      900px 520px at 10% 8%,
+      rgba(0, 82, 0, 0.07),
+      transparent 58%
+    ),
+    radial-gradient(
+      880px 600px at 90% 32%,
+      rgba(222, 183, 43, 0.09),
+      transparent 58%
+    ),
+    #fffdf7;
+}
+.band-sand {
+  background:
+    radial-gradient(
+      900px 520px at 88% 8%,
+      rgba(222, 183, 43, 0.17),
+      transparent 58%
+    ),
+    radial-gradient(
+      820px 560px at 6% 78%,
+      rgba(118, 97, 83, 0.13),
+      transparent 60%
+    ),
+    #f4f1e6;
+}
+
+/* Timeline description card — a lit ground rather than a flat tile: gold from
+   the top-right corner, sage from the bottom-left, over the card fill. */
+.tl-card {
+  border: 1px solid transparent;
+  background:
+    radial-gradient(
+        120% 110% at 100% 0%,
+        rgba(222, 183, 43, 0.2),
+        rgba(222, 183, 43, 0) 62%
+      )
+      padding-box,
+    radial-gradient(
+        100% 100% at 0% 100%,
+        rgba(0, 82, 0, 0.12),
+        rgba(0, 82, 0, 0) 64%
+      )
+      padding-box,
+    linear-gradient(var(--tile), var(--tile)) padding-box,
+    linear-gradient(135deg, rgba(0, 82, 0, 0.45), rgba(222, 183, 43, 0.3))
+      border-box;
+}
+
+/* Timeline nodes — dim until the scroll-drawn rail head reaches them. */
+.tl-node {
+  opacity: 0.3;
+  transform: translate(-50%, -50%) scale(0.5);
+  transition:
+    opacity 0.45s ease,
+    transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.55s ease;
+}
+.tl-node[data-lit="true"] {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  box-shadow: 0 0 0 5px rgba(222, 183, 43, 0.14);
+}
+
+/* Floating gradient orbs — vertical bob + slow multi-axis drift. */
+@keyframes floatY {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-26px);
+  }
+}
+@keyframes floatY2 {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(22px);
+  }
+}
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(20px, -22px) scale(1.06);
+  }
+  66% {
+    transform: translate(-16px, 14px) scale(0.96);
+  }
+}
+.float-y {
+  animation: floatY 11s ease-in-out infinite;
+}
+.float-y2 {
+  animation: floatY2 13s ease-in-out infinite;
+}
+.drift {
+  animation: drift 17s ease-in-out infinite;
+}
+
+/* ---------- Vinyl records (genre orbit) ---------- */
+
+/* Story-style gradient ring around each record. The ring, label and shadow
+   colours come in per record as custom properties (see GenreOrbit's SKINS). */
+.vinyl-ring {
+  border-radius: 50%;
+  padding: 3px;
+  background: var(--ring-grad, var(--grad-accent));
+  box-shadow: 0 10px 22px var(--ring-glow, rgba(1, 22, 56, 0.22));
+}
+.vinyl-gap {
+  position: relative;
+  height: 100%;
+  border-radius: 50%;
+  padding: 2px;
+  background: var(--porcelain);
+}
+/* Grooves are radially symmetric, so only the label betrays the spin — which
+   is exactly how a real record reads. */
+.vinyl {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
+  background:
+    repeating-radial-gradient(
+      circle at 50% 50%,
+      rgba(255, 255, 255, 0.07) 0 1px,
+      rgba(255, 255, 255, 0) 1px 4px
+    ),
+    radial-gradient(circle at 50% 50%, #1b1b18 0 32%, #0a0a09 64%, #141412 100%);
+  animation: vinylSpin 4.5s linear infinite;
+}
+.vinyl-label {
+  position: absolute;
+  inset: 31%;
+  border-radius: 50%;
+  background: var(--label-grad, var(--grad-node));
+  box-shadow: inset 0 0 0 1px rgba(255, 253, 247, 0.4);
+}
+.vinyl-hole {
+  position: absolute;
+  inset: 47.5%;
+  border-radius: 50%;
+  background: var(--porcelain);
+}
+/* Fixed light source — sits outside the spinning disc so it never turns. */
+.vinyl-sheen {
+  position: absolute;
+  inset: 2px;
+  border-radius: 50%;
+  pointer-events: none;
+  background: linear-gradient(
+    118deg,
+    rgba(255, 255, 255, 0.18) 0%,
+    rgba(255, 255, 255, 0) 34%,
+    rgba(255, 255, 255, 0) 66%,
+    rgba(255, 255, 255, 0.12) 100%
+  );
+}
+@keyframes vinylSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* The orbit's centre — a painted ground rather than a plain card: three
+   palette glows bleeding into each other, over faint grooves that echo the
+   records circling it, inside the same gradient hairline as .warm-card. */
+.orbit-core {
+  border: 1px solid transparent;
+  background:
+    radial-gradient(
+        circle at 24% 26%,
+        rgba(0, 82, 0, 0.15),
+        rgba(0, 82, 0, 0) 54%
+      )
+      padding-box,
+    radial-gradient(
+        circle at 76% 74%,
+        rgba(222, 183, 43, 0.38),
+        rgba(222, 183, 43, 0) 60%
+      )
+      padding-box,
+    radial-gradient(
+        circle at 70% 14%,
+        rgba(1, 22, 56, 0.12),
+        rgba(1, 22, 56, 0) 50%
+      )
+      padding-box,
+    repeating-radial-gradient(
+        circle at 50% 50%,
+        rgba(118, 97, 83, 0.11) 0 1px,
+        rgba(118, 97, 83, 0) 1px 8px
+      )
+      padding-box,
+    linear-gradient(var(--tile), var(--tile)) padding-box,
+    linear-gradient(135deg, rgba(0, 82, 0, 0.45), rgba(222, 183, 43, 0.3))
+      border-box;
+  box-shadow:
+    0 18px 40px rgba(1, 22, 56, 0.12),
+    inset 0 0 0 1px rgba(222, 183, 43, 0.3),
+    inset 0 0 26px rgba(255, 253, 247, 0.6);
+}
+
+/* Light sweeping across the lacquer. Clipped by the border radius, so no
+   overflow:hidden — the halos need to escape the box. */
+.orbit-core-sweep {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  background: conic-gradient(
+    from 0deg,
+    rgba(222, 183, 43, 0) 0deg,
+    rgba(222, 183, 43, 0.2) 34deg,
+    rgba(255, 253, 247, 0.22) 52deg,
+    rgba(118, 97, 83, 0.09) 78deg,
+    rgba(222, 183, 43, 0) 124deg,
+    rgba(222, 183, 43, 0) 360deg
+  );
+  animation: coreSweep 12s linear infinite;
+}
+@keyframes coreSweep {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Slow rings breathing out of the orbit's centre. */
+.orbit-halo {
+  animation: orbitHalo 4.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+@keyframes orbitHalo {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.28);
+    opacity: 0;
+  }
+}
+
+/* Genre marquees — track holds the list twice, so -50% loops seamlessly. */
+@keyframes marqueeX {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee {
+  display: flex;
+  width: max-content;
+  animation: marqueeX 30s linear infinite;
+}
+.marquee-rev {
+  animation-direction: reverse;
+  animation-duration: 38s;
+}
+.marquee-wrap:hover .marquee {
+  animation-play-state: paused;
+}
+
+/* Hero-local dither — finer, stronger than the global grain, to break the
+   banding in the hero's dark bottom gradient. */
+.hero-dither {
+  opacity: 0.1;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='hn'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23hn)'/%3E%3C/svg%3E");
+}
+
+/* Film grain over the whole page. */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.045;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .tihom-rise,
+  .float-y,
+  .float-y2,
+  .drift,
+  .marquee,
+  .text-warm,
+  .vinyl,
+  .orbit-halo,
+  .orbit-core-sweep {
+    animation: none;
+  }
+  .tl-node {
+    transition: none;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
