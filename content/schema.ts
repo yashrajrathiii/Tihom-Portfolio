@@ -76,8 +76,12 @@ export type SiteContent = {
     phoneDisplay: string;
     phoneHref: string;
     email: string;
+    /** The artist's own account. */
     instagram: { handle: string; href: string };
-    cta: string;
+    /** The manager's account. Blank out either field to hide the card. */
+    managerInstagram: { handle: string; href: string };
+    /** Booking line on WhatsApp. Blank out either field to hide the card. */
+    whatsapp: { display: string; href: string };
     location: string;
   };
 };

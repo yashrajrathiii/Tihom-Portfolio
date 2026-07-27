@@ -8,28 +8,35 @@ import {
   isSupabaseConfigured,
 } from "./supabase/config";
 
+function isPlainObject(v: unknown): v is Record<string, unknown> {
+  return typeof v === "object" && v !== null && !Array.isArray(v);
+}
+
 /**
- * Merge a stored document over the defaults, one section deep.
+ * Merge a stored document over the defaults, recursively.
  *
- * Shallow-per-section rather than a blind spread: it means a section added to
- * the schema after the row was written still renders (it falls through to its
- * default) instead of arriving as undefined and crashing the page.
+ * Objects merge key by key so a field added to the schema *after* a row was
+ * written still renders — it falls through to its default instead of arriving
+ * undefined and blanking part of the page. Without this, every schema change
+ * would need a migration of the stored JSON.
+ *
+ * Arrays are replaced wholesale, never merged: the lists are the artist's, and
+ * merging would make a deleted gig reappear from the defaults.
  */
+function deepMerge<T>(base: T, override: unknown): T {
+  if (override === undefined || override === null) return base;
+  if (!isPlainObject(base) || !isPlainObject(override)) return override as T;
+
+  const out: Record<string, unknown> = { ...base };
+  for (const [key, value] of Object.entries(override)) {
+    out[key] = key in base ? deepMerge(base[key], value) : value;
+  }
+  return out as T;
+}
+
 function withDefaults(stored: Partial<SiteContent> | null): SiteContent {
   if (!stored) return defaultContent;
-  const merged: SiteContent = { ...defaultContent };
-  for (const key of Object.keys(defaultContent) as (keyof SiteContent)[]) {
-    const value = stored[key];
-    if (value !== undefined && value !== null) {
-      // Each section is replaced wholesale — the editor always submits a
-      // complete section, so a partial merge would only mask a bad write.
-      // Object.assign rather than merged[key] = …: with a union key,
-      // TypeScript widens the target and the value independently and can't
-      // see that the two are correlated.
-      Object.assign(merged, { [key]: value });
-    }
-  }
-  return merged;
+  return deepMerge(defaultContent, stored);
 }
 
 /**

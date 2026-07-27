@@ -488,15 +488,57 @@ function ContactForm({
           set({ ...v, instagram: { ...v.instagram, href: e.target.value } })
         }
       />
+
+      <p className="m-0 mb-3 mt-6 text-[12px] text-[#000500]/55">
+        Clear both fields of a channel below to take its card off the page.
+      </p>
+
+      <Field
+        label="Manager Instagram handle"
+        value={v.managerInstagram?.handle ?? ""}
+        onChange={(e) =>
+          set({
+            ...v,
+            managerInstagram: {
+              href: v.managerInstagram?.href ?? "",
+              handle: e.target.value,
+            },
+          })
+        }
+      />
+      <Field
+        label="Manager Instagram link"
+        value={v.managerInstagram?.href ?? ""}
+        onChange={(e) =>
+          set({
+            ...v,
+            managerInstagram: {
+              handle: v.managerInstagram?.handle ?? "",
+              href: e.target.value,
+            },
+          })
+        }
+      />
+      <Field
+        label="WhatsApp number"
+        value={v.whatsapp?.display ?? ""}
+        onChange={(e) =>
+          set({
+            ...v,
+            whatsapp: {
+              display: e.target.value,
+              // wa.me takes the bare number, so the link is derived rather
+              // than typed — one less thing to get wrong.
+              href: `https://wa.me/${e.target.value.replace(/\D/g, "")}`,
+            },
+          })
+        }
+      />
+
       <Field
         label="Location"
         value={v.location}
         onChange={(e) => set({ ...v, location: e.target.value })}
-      />
-      <Field
-        label="Button label"
-        value={v.cta}
-        onChange={(e) => set({ ...v, cta: e.target.value })}
       />
     </>
   );

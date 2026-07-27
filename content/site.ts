@@ -119,11 +119,20 @@ export const defaultContent: SiteContent = {
     headingAccent: "Tihom.",
     blurb:
       "To collaborate and craft a memorable night, reach out for bookings — he's always up for a new room to read.",
-    phoneDisplay: "+91 62642 57124",
-    phoneHref: "tel:+916264257124",
-    email: "mohitchandani706@gmail.com",
+    phoneDisplay: "+91 79991 40517",
+    phoneHref: "tel:+917999140517",
+    // Bookings route through the manager, not the artist.
+    email: "vidyanshukundu25@gmail.com",
     instagram: { handle: "@i.tihom", href: "https://instagram.com/i.tihom" },
-    cta: "Send a message",
+    managerInstagram: {
+      handle: "@imeanwhyv_",
+      href: "https://www.instagram.com/imeanwhyv_",
+    },
+    whatsapp: {
+      display: "+91 79991 40517",
+      // wa.me wants the number bare — no +, spaces or dashes.
+      href: "https://wa.me/917999140517",
+    },
     location: "Goa/Raipur, India",
   },
 };

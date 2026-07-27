@@ -5,12 +5,63 @@ import { Journey } from "@/components/Journey";
 import { Timeline } from "@/components/Timeline";
 import { GenreOrbit } from "@/components/GenreOrbit";
 import { InstagramGlyph } from "@/components/InstagramGlyph";
+import { WhatsappGlyph } from "@/components/WhatsappGlyph";
 import { SectionEditor } from "@/components/admin/SectionEditor";
 import { AdminBar } from "@/components/admin/AdminBar";
 import { getContent } from "@/lib/content";
 
 /** Shared horizontal padding for every content section. */
 const PAD = "px-[clamp(24px,5vw,90px)]";
+
+/**
+ * One booking channel. Renders nothing without both a link and a value, so
+ * clearing a field in the admin panel retires the card cleanly.
+ */
+function ContactCard({
+  href,
+  label,
+  value,
+  icon,
+  size = "sm",
+}: {
+  href?: string;
+  label: string;
+  value?: string;
+  icon: React.ReactNode;
+  /** "lg" is the artist's own card, which carries the section on its own. */
+  size?: "sm" | "lg";
+}) {
+  if (!href || !value) return null;
+  const large = size === "lg";
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`panel-card group flex items-center rounded-2xl transition-transform duration-300 hover:-translate-y-1 ${
+        large ? "gap-6 p-8" : "gap-4 p-5"
+      }`}
+    >
+      {icon}
+      <div className="flex flex-col">
+        <span
+          className={`uppercase tracking-[0.14em] text-muted ${
+            large ? "text-[13px]" : "text-[12px]"
+          }`}
+        >
+          {label}
+        </span>
+        <span
+          className={`font-semibold text-foreground ${
+            large ? "text-[clamp(22px,2.2vw,30px)]" : "text-[19px]"
+          }`}
+        >
+          {value}
+        </span>
+      </div>
+    </a>
+  );
+}
 
 /** Re-read the document at most once a minute for visitors; a save calls
  *  revalidatePath("/") so the artist sees their own edit immediately. */
@@ -149,7 +200,11 @@ export default async function Home() {
             </Reveal>
 
             <div className="mt-12 grid gap-10 sm:grid-cols-2 md:max-w-[820px]">
-              <Reveal delay={120} className="flex flex-col gap-6">
+              {/* Booking channels stack together on the left — phone, the two
+                  people you'd actually message, then email. Each card is
+                  optional: blanking its handle or link in the admin panel
+                  removes it rather than leaving a dead link. */}
+              <Reveal delay={120} className="flex flex-col gap-5">
                 <a href={contact.phoneHref} className="group flex flex-col gap-1">
                   <span className="text-[12px] uppercase tracking-[0.14em] text-muted">
                     Bookings
@@ -158,9 +213,23 @@ export default async function Home() {
                     {contact.phoneDisplay}
                   </span>
                 </a>
+
+                <ContactCard
+                  href={contact.managerInstagram?.href}
+                  label="Management"
+                  value={contact.managerInstagram?.handle}
+                  icon={<InstagramGlyph className="h-9 w-9 transition-transform duration-500 group-hover:rotate-6" />}
+                />
+                <ContactCard
+                  href={contact.whatsapp?.href}
+                  label="WhatsApp"
+                  value={contact.whatsapp?.display}
+                  icon={<WhatsappGlyph className="h-9 w-9 transition-transform duration-500 group-hover:rotate-6" />}
+                />
+
                 <a
                   href={`mailto:${contact.email}`}
-                  className="group flex flex-col gap-1"
+                  className="group mt-1 flex flex-col gap-1"
                 >
                   <span className="text-[12px] uppercase tracking-[0.14em] text-muted">
                     Email
@@ -171,34 +240,16 @@ export default async function Home() {
                 </a>
               </Reveal>
 
-              <Reveal delay={180} className="flex flex-col gap-5">
-                <a
+              {/* The artist's own account stands alone and larger — it's the
+                  one a visitor is most likely to want. */}
+              <Reveal delay={180} className="flex flex-col justify-center">
+                <ContactCard
+                  size="lg"
                   href={contact.instagram.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="panel-card group flex items-center gap-4 rounded-2xl p-5 transition-transform duration-300 hover:-translate-y-1"
-                >
-                  <InstagramGlyph className="h-9 w-9 transition-transform duration-500 group-hover:rotate-6" />
-                  <div className="flex flex-col">
-                    <span className="text-[12px] uppercase tracking-[0.14em] text-muted">
-                      Follow
-                    </span>
-                    <span className="text-[19px] font-semibold text-foreground">
-                      {contact.instagram.handle}
-                    </span>
-                  </div>
-                </a>
-                <a
-                  href={`mailto:${contact.email}`}
-                  className="inline-flex items-center justify-center gap-2 self-start rounded-full px-7 py-4 text-[16px] font-semibold text-[#000500] transition-transform duration-300 hover:-translate-y-0.5"
-                  style={{ background: "var(--grad-cta)" }}
-                >
-                  {contact.cta}
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000500" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <line x1="5" y1="12" x2="19" y2="12" />
-                    <polyline points="12 5 19 12 12 19" />
-                  </svg>
-                </a>
+                  label="Follow"
+                  value={contact.instagram.handle}
+                  icon={<InstagramGlyph className="h-14 w-14 transition-transform duration-500 group-hover:rotate-6" />}
+                />
               </Reveal>
             </div>
 
