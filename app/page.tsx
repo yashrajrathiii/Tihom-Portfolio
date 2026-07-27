@@ -23,6 +23,7 @@ function ContactCard({
   value,
   icon,
   size = "sm",
+  className = "",
 }: {
   href?: string;
   label: string;
@@ -30,7 +31,8 @@ function ContactCard({
   icon: React.ReactNode;
   /** "lg" is the artist's own card, which carries the section on its own. */
   size?: "sm" | "lg";
-}) {
+  className?: string;
+}): React.ReactElement | null {
   if (!href || !value) return null;
   const large = size === "lg";
   return (
@@ -40,7 +42,7 @@ function ContactCard({
       rel="noopener noreferrer"
       className={`panel-card group flex items-center rounded-2xl transition-transform duration-300 hover:-translate-y-1 ${
         large ? "gap-6 p-8" : "gap-4 p-5"
-      }`}
+      } ${className}`}
     >
       {icon}
       <div className="flex flex-col">
@@ -199,12 +201,14 @@ export default async function Home() {
               </p>
             </Reveal>
 
-            <div className="mt-12 grid gap-10 sm:grid-cols-2 md:max-w-[820px]">
-              {/* Booking channels stack together on the left — phone, the two
-                  people you'd actually message, then email. Each card is
-                  optional: blanking its handle or link in the admin panel
-                  removes it rather than leaving a dead link. */}
-              <Reveal delay={120} className="flex flex-col gap-5">
+            {/* Explicit rows rather than two stacked columns: it lets the
+                artist's card occupy the same row as the two channel cards, so
+                it stretches to exactly their combined height and lines up top
+                and bottom with them. Each card is optional — blanking its
+                handle or link in the admin panel removes it rather than
+                leaving a dead link. */}
+            <div className="mt-12 grid gap-x-10 gap-y-5 sm:grid-cols-2 md:max-w-[820px]">
+              <Reveal delay={120} className="sm:col-start-1 sm:row-start-1">
                 <a href={contact.phoneHref} className="group flex flex-col gap-1">
                   <span className="text-[12px] uppercase tracking-[0.14em] text-muted">
                     Bookings
@@ -213,7 +217,12 @@ export default async function Home() {
                     {contact.phoneDisplay}
                   </span>
                 </a>
+              </Reveal>
 
+              <Reveal
+                delay={150}
+                className="flex flex-col gap-5 sm:col-start-1 sm:row-start-2"
+              >
                 <ContactCard
                   href={contact.managerInstagram?.href}
                   label="Management"
@@ -226,10 +235,29 @@ export default async function Home() {
                   value={contact.whatsapp?.display}
                   icon={<WhatsappGlyph className="h-9 w-9 transition-transform duration-500 group-hover:rotate-6" />}
                 />
+              </Reveal>
 
+              {/* The artist's own account, alone and larger — the one a
+                  visitor is most likely to want. The min-height keeps it from
+                  collapsing if both cards beside it are ever blanked out. */}
+              <Reveal
+                delay={180}
+                className="sm:col-start-2 sm:row-start-2 sm:h-full"
+              >
+                <ContactCard
+                  size="lg"
+                  className="h-full min-h-[9rem]"
+                  href={contact.instagram.href}
+                  label="Follow"
+                  value={contact.instagram.handle}
+                  icon={<InstagramGlyph className="h-14 w-14 transition-transform duration-500 group-hover:rotate-6" />}
+                />
+              </Reveal>
+
+              <Reveal delay={210} className="sm:col-start-1 sm:row-start-3">
                 <a
                   href={`mailto:${contact.email}`}
-                  className="group mt-1 flex flex-col gap-1"
+                  className="group flex flex-col gap-1"
                 >
                   <span className="text-[12px] uppercase tracking-[0.14em] text-muted">
                     Email
@@ -238,18 +266,6 @@ export default async function Home() {
                     {contact.email}
                   </span>
                 </a>
-              </Reveal>
-
-              {/* The artist's own account stands alone and larger — it's the
-                  one a visitor is most likely to want. */}
-              <Reveal delay={180} className="flex flex-col justify-center">
-                <ContactCard
-                  size="lg"
-                  href={contact.instagram.href}
-                  label="Follow"
-                  value={contact.instagram.handle}
-                  icon={<InstagramGlyph className="h-14 w-14 transition-transform duration-500 group-hover:rotate-6" />}
-                />
               </Reveal>
             </div>
 
