@@ -13,48 +13,24 @@ const DISC = "clamp(50px, 9vw, 112px)";
 const CORE = "clamp(112px, 17vw, 168px)";
 
 /**
- * A colourway per record — ring, centre label and shadow tint. Every stop is
- * mixed from the brand palette (Prussian, Forest, Ash Brown, Gold), pushed a
- * little warmer or cooler so no two records read the same. Order follows
- * `genres.primary`, so each one is tuned to its genre.
+ * A halo tint per record, pulled from the dominant colour of the sleeve it
+ * carries, so the glow under each disc echoes its art. Order follows
+ * `genres.primary`. The rims stay black — a real record's edge is vinyl, and
+ * the covers bring all the colour these need.
  */
 const SKINS = [
-  // Techno — cold steel blue into gold.
-  {
-    ring: "linear-gradient(140deg, #011638 0%, #17516e 52%, #deb72b 100%)",
-    label: "linear-gradient(135deg, #011638, #3d8ba8)",
-    glow: "rgba(1, 22, 56, 0.3)",
-  },
-  // Hard Techno — the darkest of the set, plum through Prussian.
-  {
-    ring: "linear-gradient(140deg, #3f2555 0%, #011638 55%, #b98ad6 100%)",
-    label: "linear-gradient(135deg, #3f2555, #9a72c4)",
-    glow: "rgba(63, 37, 85, 0.32)",
-  },
-  // Psy — acid green, the loudest colourway.
-  {
-    ring: "linear-gradient(140deg, #005200 0%, #4f9a1e 50%, #cfe36a 100%)",
-    label: "linear-gradient(135deg, #005200, #a3d54a)",
-    glow: "rgba(0, 82, 0, 0.3)",
-  },
-  // BollyTech — marigold and rose, the most ornamental.
-  {
-    ring: "linear-gradient(140deg, #b8341f 0%, #deb72b 55%, #f0d98a 100%)",
-    label: "linear-gradient(135deg, #b8341f, #deb72b)",
-    glow: "rgba(184, 52, 31, 0.28)",
-  },
-  // Afro House — clay and amber, straight off the Ash Brown token.
-  {
-    ring: "linear-gradient(140deg, #766153 0%, #c98a3c 52%, #deb72b 100%)",
-    label: "linear-gradient(135deg, #8a5a2b, #e6c15a)",
-    glow: "rgba(118, 97, 83, 0.32)",
-  },
-  // House — the house pairing: forest into gold.
-  {
-    ring: "linear-gradient(140deg, #deb72b 0%, #8a9c2f 48%, #005200 100%)",
-    label: "linear-gradient(135deg, #005200, #deb72b)",
-    glow: "rgba(0, 82, 0, 0.26)",
-  },
+  // Techno — ARTBAT, the blue portal.
+  { glow: "rgba(10, 222, 255, 0.32)" },
+  // Hard Tech — Ben Nicky, the acid yellow X.
+  { glow: "rgba(214, 224, 40, 0.3)" },
+  // Psy — Astrix, the psychedelic jungle.
+  { glow: "rgba(88, 190, 70, 0.32)" },
+  // BollyTech — Fake Tattoos, the teal rain.
+  { glow: "rgba(28, 190, 200, 0.32)" },
+  // Afro House — the red extinguisher.
+  { glow: "rgba(230, 40, 15, 0.34)" },
+  // House — the black-and-white crowd shot.
+  { glow: "rgba(237, 239, 243, 0.22)" },
 ];
 
 /** Genres as records orbiting the one thing that isn't a genre. */
@@ -62,7 +38,7 @@ export function GenreOrbit({
   items,
   center,
 }: {
-  items: string[];
+  items: { name: string; cover?: string }[];
   center: string;
 }) {
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -141,16 +117,16 @@ export function GenreOrbit({
         <span aria-hidden="true" className="orbit-core-sweep" />
         <span
           aria-hidden="true"
-          className="orbit-halo absolute inset-0 rounded-full border border-[rgba(0,82,0,0.35)]"
+          className="orbit-halo absolute inset-0 rounded-full border border-[rgba(10,222,255,0.35)]"
         />
         <span
           aria-hidden="true"
-          className="orbit-halo absolute inset-0 rounded-full border border-[rgba(222,183,43,0.35)]"
+          className="orbit-halo absolute inset-0 rounded-full border border-[rgba(203,21,49,0.4)]"
           style={{ animationDelay: "1.8s" }}
         />
         {/* h3 under the section's own h2, now that the orbit shares the bio's
             section rather than heading one of its own. */}
-        <h3 className="text-warm relative text-[clamp(16px,1.6vw,23px)] font-extrabold leading-[1.1] tracking-[-0.02em]">
+        <h3 className="text-accent relative text-[clamp(16px,1.6vw,23px)] font-extrabold leading-[1.1] tracking-[-0.02em]">
           {center}
         </h3>
       </div>
@@ -161,16 +137,20 @@ export function GenreOrbit({
           // its centre is the disc's centre — otherwise the depth scale would
           // pull each record off the circle by a different amount.
           <li
-            key={g}
+            key={g.name}
             ref={(el) => {
               nodesRef.current[i] = el;
             }}
             className="absolute left-1/2 top-1/2 will-change-transform"
             style={{ width: DISC, height: DISC }}
           >
-            <VinylRecord size="100%" {...SKINS[i % SKINS.length]} />
+            <VinylRecord
+              size="100%"
+              cover={g.cover}
+              {...SKINS[i % SKINS.length]}
+            />
             <h4 className="absolute left-1/2 top-full mt-3 -translate-x-1/2 whitespace-nowrap text-[clamp(11px,1.05vw,15px)] font-bold uppercase tracking-[0.1em] text-foreground">
-              {g}
+              {g.name}
             </h4>
           </li>
         ))}

@@ -19,9 +19,9 @@ const HEAD_LINE = 0.72;
 const RAIL_MASK =
   "linear-gradient(to bottom, transparent 0%, black 6%, black 94%, transparent 100%)";
 
-/** Comet trail: bright gold head at the growing edge, fading up the rail. */
+/** Comet trail: bright aqua head at the growing edge, fading up the rail. */
 const RAIL_FILL =
-  "linear-gradient(to top, #deb72b 0%, #005200 12%, rgba(0,82,0,0) 100%)";
+  "linear-gradient(to top, #0adeff 0%, #1e3888 12%, rgba(30,56,136,0) 100%)";
 
 /** Sized so the longest milestone still fits on one line at every width — a
  *  wrap would break out of the fixed-height rolling window. */
@@ -120,7 +120,7 @@ export function Timeline({ items }: { items: Milestone[] }) {
 
             <div className="flex items-center gap-5 md:gap-10">
               <div className="w-[clamp(56px,7vw,96px)] shrink-0 text-right">
-                <div className="text-warm text-[clamp(15px,1.4vw,21px)] font-bold leading-none tracking-[-0.02em]">
+                <div className="text-accent text-[clamp(15px,1.4vw,21px)] font-bold leading-none tracking-[-0.02em]">
                   {m.year}
                 </div>
                 {m.sub && (
@@ -145,7 +145,7 @@ export function Timeline({ items }: { items: Milestone[] }) {
                         paints only inside the box, so an italic glyph's
                         overhang would otherwise render transparent and clip
                         the last letter. */}
-                    <span className={`${TITLE} text-warm pr-[0.14em] italic`}>
+                    <span className={`${TITLE} text-accent pr-[0.14em] italic`}>
                       {m.title}
                     </span>
                   </div>
@@ -162,7 +162,7 @@ export function Timeline({ items }: { items: Milestone[] }) {
             {/* …and swinging in from the right on hover above it. */}
             <div
               aria-hidden="true"
-              className="tl-card pointer-events-none absolute right-0 top-1/2 z-20 hidden w-[320px] translate-x-4 -translate-y-1/2 rotate-2 scale-95 rounded-[22px] p-6 opacity-0 shadow-[0_22px_54px_rgba(1,22,56,0.14)] transition-all duration-500 ease-out group-hover:translate-x-0 group-hover:rotate-0 group-hover:scale-100 group-hover:opacity-100 lg:block xl:w-[416px] xl:p-8 2xl:w-[456px]"
+              className="tl-card pointer-events-none absolute right-0 top-1/2 z-20 hidden w-[320px] translate-x-4 -translate-y-1/2 rotate-2 scale-95 rounded-[22px] p-6 opacity-0 shadow-[0_22px_54px_rgba(0,0,0,0.55)] transition-all duration-500 ease-out group-hover:translate-x-0 group-hover:rotate-0 group-hover:scale-100 group-hover:opacity-100 lg:block xl:w-[416px] xl:p-8 2xl:w-[456px]"
             >
               <div
                 className="mb-4 h-1 w-12 rounded-full"

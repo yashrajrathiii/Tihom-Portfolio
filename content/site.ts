@@ -1,13 +1,13 @@
 /**
  * All site copy lives here. Sourced from Monty's press kit + the content brief.
- * Only the gallery is intentionally left as placeholders.
+ * Only the gig photography is intentionally left as placeholders.
  */
 
 export const nav = [
   { label: "Story", href: "#about" },
   { label: "Journey", href: "#timeline" },
   { label: "Genres", href: "#genres" },
-  { label: "Gallery", href: "#gallery" },
+  { label: "Gigs", href: "#journey" },
   { label: "Book", href: "#contact" },
 ];
 
@@ -59,6 +59,23 @@ export const timeline = {
   ],
 };
 
+/**
+ * A gig card's artwork. `src` is a path under /public; a clip also takes a
+ * `poster` still, which is what shows before it is the centred card and for
+ * anyone who asked for reduced motion.
+ */
+export type GigMedia = {
+  src: string;
+  kind: "photo" | "video";
+  poster?: string;
+  /**
+   * Which way the caption reads over this particular shot: "light" for white
+   * type on a dark frame, "dark" for black type on a bright one. Set it per
+   * image — it is the only thing that can't be worked out from the file.
+   */
+  tone?: "light" | "dark";
+};
+
 export const journey = {
   headingLead: "Still learning —",
   headingAccent: "already flirting with the floor.",
@@ -66,50 +83,59 @@ export const journey = {
     "A self-taught artist, DJ Tihom began this journey hoping to make a name for himself and build something big — and he's proudly still in his learning phase. His biggest influence is the wild party life of Goa, where people don't just swing with the beats but genuinely appreciate the art that music is.",
     "His first gig came not long ago — a small open-air set in March, in collaboration with The Local. Since then more offers have followed: private parties spinning Psy, BollyTech and Techno, and another night with The Local. Still exploring, he approaches music like he's flirting with the dance floor — crafting ease, fun, and a slow slide into a musical trance.",
   ],
-  /** Ordered as they're stacked in the deck: March first, then April. */
+  /**
+   * The gig log and the gallery are the same thing now — one card per night,
+   * carrying its own photo or clip. Ordered oldest first: March, then April.
+   * `media` is the only placeholder left on the site: fill it in and the card
+   * swaps its empty slot for the real thing.
+   */
   gigs: [
     {
       month: "March",
       year: "2026",
       name: "Local Flea Market",
       detail: "with The Local",
+      media: undefined as GigMedia | undefined,
     },
-    { month: "March", year: "2026", name: "Private parties", detail: "×2" },
+    {
+      month: "March",
+      year: "2026",
+      name: "Private parties",
+      detail: "×2",
+      media: undefined as GigMedia | undefined,
+    },
     {
       month: "April",
       year: "2026",
       name: "Local Flea",
       detail: "with The Local",
+      media: undefined as GigMedia | undefined,
     },
     {
       month: "April",
       year: "2026",
       name: "Private parties",
       detail: "Psy · BollyTech · Techno",
+      media: undefined as GigMedia | undefined,
     },
   ],
 };
 
-export const genres = {
-  primary: ["Techno", "Hard Techno", "Psy", "BollyTech", "Afro House", "House"],
-  open: "Open to explore",
-};
-
 /**
- * Gallery tiles — the only placeholder section. Set `src` to a path under
- * /public to drop real media in; leave undefined for the styled empty slot.
+ * Each genre rides a record, and each record wears a sleeve that stands for
+ * the sound. Covers are pre-scaled to 320px squares — the label renders at
+ * roughly 56px, so that is 3x DPR with room over.
  */
-export const gallery = {
-  feature: {
-    caption: "Performance reel / live set",
-    src: undefined as string | undefined,
-  },
-  tall: { caption: "Promo poster", src: undefined as string | undefined },
-  row: [
-    { caption: "Live photo", src: undefined as string | undefined },
-    { caption: "Promo shot", src: undefined as string | undefined },
-    { caption: "Reel", src: undefined as string | undefined },
+export const genres = {
+  primary: [
+    { name: "Techno", cover: "/assets/covers/techno.webp" },
+    { name: "Hard Tech", cover: "/assets/covers/hard-tech.webp" },
+    { name: "Psy", cover: "/assets/covers/psy.webp" },
+    { name: "BollyTech", cover: "/assets/covers/bollytech.webp" },
+    { name: "Afro House", cover: "/assets/covers/afro-house.webp" },
+    { name: "House", cover: "/assets/covers/house.webp" },
   ],
+  open: "Open to explore",
 };
 
 export const contact = {

@@ -1,4 +1,4 @@
-export function ArrowIcon({ stroke = "#E1E0CC" }: { stroke?: string }) {
+export function ArrowIcon({ stroke = "#EDEFF3" }: { stroke?: string }) {
   return (
     <svg
       width="16"

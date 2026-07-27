@@ -16,8 +16,8 @@ export function InstagramGlyph({ className = "" }: { className?: string }) {
           y2="24"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#005200" />
-          <stop offset="1" stopColor="#deb72b" />
+          <stop stopColor="#0adeff" />
+          <stop offset="1" stopColor="#cb1531" />
         </linearGradient>
       </defs>
       <rect

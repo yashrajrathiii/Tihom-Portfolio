@@ -8,7 +8,7 @@ import { hero, nav } from "@/content/site";
 
 /** Distance the wordmark sits below its natural baseline, in px. */
 const LOGO_SHIFT_Y = 30;
-const LOGO_COLOR = "#E1E0CC";
+const LOGO_COLOR = "#EDEFF3";
 
 export function Hero() {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -98,7 +98,7 @@ export function Hero() {
             <a
               key={item.label}
               href={item.href}
-              className="text-[13px] tracking-[0.01em] text-[rgba(225,224,204,0.78)] sm:text-[14px]"
+              className="text-[13px] tracking-[0.01em] text-[rgba(237,239,243,0.78)] sm:text-[14px]"
             >
               {item.label}
             </a>
@@ -139,7 +139,7 @@ export function Hero() {
 
           <div className="flex flex-col gap-6 pb-[26px]">
             <p
-              className="tihom-rise m-0 text-[clamp(15px,1.15vw,18px)] leading-[1.35] text-[rgba(225,224,204,0.82)]"
+              className="tihom-rise m-0 text-[clamp(15px,1.15vw,18px)] leading-[1.35] text-[rgba(237,239,243,0.82)]"
               style={{ animationDelay: "0.15s" }}
             >
               {hero.tagline}
