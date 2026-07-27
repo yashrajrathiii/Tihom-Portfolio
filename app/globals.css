@@ -573,6 +573,193 @@ html {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
+/* ---------- Admin panel ----------
+   Deliberately light-on-white against the dark site: this is a tool, not part
+   of the page, and the contrast makes it obvious which one you are looking
+   at. Scoped to its own classes so none of it leaks into the public view. */
+
+.admin-modal {
+  margin: auto;
+  max-width: min(560px, calc(100vw - 32px));
+  width: 100%;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: #000500;
+}
+.admin-modal::backdrop {
+  background: rgba(0, 5, 0, 0.72);
+  backdrop-filter: blur(3px);
+}
+.admin-modal-card {
+  position: relative;
+  border-radius: 4px;
+  background: #ffffff;
+  padding: 28px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+}
+
+/* The form body scrolls, so the save button never leaves the viewport on a
+   long list. */
+.admin-scroll {
+  max-height: min(58vh, 520px);
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.admin-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(0, 5, 0, 0.5);
+}
+
+.admin-input {
+  width: 100%;
+  border: 1px solid rgba(0, 5, 0, 0.16);
+  border-radius: 3px;
+  background: #fff;
+  padding: 10px 12px;
+  font: inherit;
+  font-size: 14px;
+  color: #000500;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.admin-input:focus {
+  outline: none;
+  border-color: #1e3888;
+  box-shadow: 0 0 0 3px rgba(30, 56, 136, 0.14);
+}
+
+.admin-save {
+  display: flex;
+  width: 100%;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 3px;
+  background: #1e3888;
+  padding: 14px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fff;
+  transition: background-color 0.2s ease;
+}
+.admin-save:hover:not(:disabled) {
+  background: #16296a;
+}
+.admin-save:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* The floating top-right controls, on the dark site rather than in a card. */
+.admin-chip {
+  display: inline-flex;
+  cursor: pointer;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: rgba(0, 5, 0, 0.72);
+  backdrop-filter: blur(10px);
+  padding: 8px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--foreground);
+  transition:
+    border-color 0.25s ease,
+    color 0.25s ease;
+}
+.admin-chip:hover {
+  border-color: rgba(10, 222, 255, 0.6);
+  color: #0adeff;
+}
+
+/* Per-section EDIT button, sitting on the page itself. */
+.admin-edit {
+  display: inline-flex;
+  cursor: pointer;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(10, 222, 255, 0.5);
+  border-radius: 3px;
+  background: rgba(10, 222, 255, 0.1);
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #0adeff;
+  transition: background-color 0.25s ease;
+}
+.admin-edit:hover {
+  background: rgba(10, 222, 255, 0.2);
+}
+
+/* Secondary buttons inside the dialogs. */
+.admin-ghost {
+  display: inline-flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  border: 1px solid rgba(0, 5, 0, 0.16);
+  border-radius: 3px;
+  background: #fff;
+  padding: 9px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(0, 5, 0, 0.7);
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+.admin-ghost:hover:not(:disabled) {
+  border-color: rgba(0, 5, 0, 0.35);
+  background: rgba(0, 5, 0, 0.03);
+}
+.admin-ghost:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.admin-icon {
+  display: grid;
+  height: 26px;
+  width: 26px;
+  cursor: pointer;
+  place-items: center;
+  border: 0;
+  border-radius: 3px;
+  background: transparent;
+  color: rgba(0, 5, 0, 0.45);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+.admin-icon:hover:not(:disabled) {
+  background: rgba(0, 5, 0, 0.07);
+  color: #000500;
+}
+.admin-icon:disabled {
+  cursor: not-allowed;
+  opacity: 0.3;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

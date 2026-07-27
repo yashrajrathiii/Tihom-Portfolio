@@ -4,13 +4,19 @@ import { useEffect, useRef } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { HeroRipple } from "@/components/HeroRipple";
-import { hero, nav } from "@/content/site";
+import type { SiteContent } from "@/content/schema";
 
 /** Distance the wordmark sits below its natural baseline, in px. */
 const LOGO_SHIFT_Y = 30;
 const LOGO_COLOR = "#EDEFF3";
 
-export function Hero() {
+export function Hero({
+  hero,
+  nav,
+}: {
+  hero: SiteContent["hero"];
+  nav: SiteContent["nav"];
+}) {
   const rootRef = useRef<HTMLDivElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);

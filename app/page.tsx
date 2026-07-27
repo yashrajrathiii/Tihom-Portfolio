@@ -5,15 +5,24 @@ import { Journey } from "@/components/Journey";
 import { Timeline } from "@/components/Timeline";
 import { GenreOrbit } from "@/components/GenreOrbit";
 import { InstagramGlyph } from "@/components/InstagramGlyph";
-import { about, contact, genres, timeline } from "@/content/site";
+import { SectionEditor } from "@/components/admin/SectionEditor";
+import { AdminBar } from "@/components/admin/AdminBar";
+import { getContent } from "@/lib/content";
 
 /** Shared horizontal padding for every content section. */
 const PAD = "px-[clamp(24px,5vw,90px)]";
 
-export default function Home() {
+/** Re-read the document at most once a minute for visitors; a save calls
+ *  revalidatePath("/") so the artist sees their own edit immediately. */
+export const revalidate = 60;
+
+export default async function Home() {
+  const { about, contact, genres, timeline, journey, hero, nav } =
+    await getContent();
+
   return (
     <div className="bg-background">
-      <Hero />
+      <Hero hero={hero} nav={nav} />
 
       {/* Sections alternate between the two bands below — black, carbon,
           black … — so each one reads as its own room. */}
@@ -36,8 +45,10 @@ export default function Home() {
           <div className="relative z-[1] grid items-center gap-14 lg:grid-cols-[1fr_1fr] lg:gap-20">
             <div>
               <Reveal>
-                <div className="text-[13px] uppercase tracking-[0.16em] text-muted">
+                <div className="flex flex-wrap items-center gap-4 text-[13px] uppercase tracking-[0.16em] text-muted">
                   01 — Bio &amp; genres
+                  <SectionEditor section="about" value={about} />
+                  <SectionEditor section="genres" value={genres} />
                 </div>
               </Reveal>
               <Reveal delay={60}>
@@ -75,8 +86,9 @@ export default function Home() {
           />
           <div className="relative z-[1]">
             <Reveal>
-              <div className="text-[13px] uppercase tracking-[0.16em] text-muted">
+              <div className="flex items-center gap-4 text-[13px] uppercase tracking-[0.16em] text-muted">
                 02 — Timeline
+                <SectionEditor section="timeline" value={timeline} />
               </div>
             </Reveal>
             <Reveal delay={60}>
@@ -101,7 +113,7 @@ export default function Home() {
                 "radial-gradient(circle, var(--glow-blue), transparent 70%)",
             }}
           />
-          <Journey />
+          <Journey journey={journey} />
         </section>
 
         {/* ===== 04 · Contact ===== */}
@@ -118,8 +130,10 @@ export default function Home() {
           />
           <div className="relative z-[1]">
             <Reveal>
-              <div className="text-[13px] uppercase tracking-[0.16em] text-muted">
+              <div className="flex items-center gap-4 text-[13px] uppercase tracking-[0.16em] text-muted">
                 04 — Contact &amp; booking
+                <SectionEditor section="contact" value={contact} />
+                <SectionEditor section="hero" value={hero} />
               </div>
             </Reveal>
             <Reveal delay={60}>
@@ -188,9 +202,17 @@ export default function Home() {
               </Reveal>
             </div>
 
-            <div className="mt-20 flex items-center justify-between border-t border-line pt-8 text-[13px] text-footer">
-              <span>© Tihom {new Date().getFullYear()}</span>
-              <span>{contact.location}</span>
+            <div className="mt-20 border-t border-line pt-8 text-[13px] text-footer">
+              <div className="flex items-center justify-between">
+                <span>© Tihom {new Date().getFullYear()}</span>
+                <span>{contact.location}</span>
+              </div>
+              {/* Admin entry point lives down here rather than floating over
+                  the page — it's for one person, and a visitor never needs it
+                  in their eyeline. */}
+              <div className="mt-5 flex justify-end">
+                <AdminBar />
+              </div>
             </div>
           </div>
         </section>

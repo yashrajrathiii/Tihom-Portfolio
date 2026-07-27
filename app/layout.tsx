@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Archivo } from "next/font/google";
+import { AdminProvider } from "@/components/admin/AdminProvider";
 import "./globals.css";
 
 const archivo = Archivo({
@@ -21,7 +22,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={archivo.variable}>
       <body>
-        {children}
+        {/* Wraps the page so any section can drop in an EDIT button, and so
+            the admin session survives navigation. The bar itself is rendered
+            by the page, down in the footer. */}
+        <AdminProvider>{children}</AdminProvider>
         <div className="grain" aria-hidden="true" />
       </body>
     </html>
