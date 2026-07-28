@@ -63,9 +63,17 @@ export async function getContent(): Promise<SiteContent> {
       .eq("id", CONTENT_ROW_ID)
       .maybeSingle();
 
-    if (error || !data) return defaultContent;
+    if (error) {
+      // Loud in the server log, quiet on the page. Falling back silently once
+      // hid a bad SUPABASE_URL for a whole deploy — the site looked fine while
+      // none of the artist's edits were reaching it.
+      console.warn("[content] Supabase read failed, using bundled copy:", error.message);
+      return defaultContent;
+    }
+    if (!data) return defaultContent;
     return withDefaults(data.doc as Partial<SiteContent>);
-  } catch {
+  } catch (err) {
+    console.warn("[content] Supabase unreachable, using bundled copy:", err);
     return defaultContent;
   }
 }
