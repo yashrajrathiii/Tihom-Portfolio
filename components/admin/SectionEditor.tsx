@@ -45,14 +45,31 @@ export function SectionEditor<K extends SectionKey>({
     e.preventDefault();
     setBusy(true);
     setError(null);
-    const result = await saveSection(section, draft);
-    setBusy(false);
-    if (!result.ok) {
-      setError(result.error);
-      return;
+    try {
+      const result = await saveSection(section, draft);
+      if (!result.ok) {
+        setError(result.error);
+        return;
+      }
+      setOpen(false);
+      router.refresh();
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      // A server action's id is content-hashed per build, so a tab left open
+      // across a deploy posts an id the new build has never heard of and gets
+      // a 404. Nothing is wrong with the data — the page just needs reloading.
+      setError(
+        /server action|failed to fetch|fetch failed|networkerror|load failed/i.test(
+          message,
+        )
+          ? "Couldn't reach the server. The page was loaded before the last update — reload and try again."
+          : `Save failed: ${message}`,
+      );
+    } finally {
+      // Always clears, so a thrown action can never strand the button on
+      // "Saving…" with no way back.
+      setBusy(false);
     }
-    setOpen(false);
-    router.refresh();
   }
 
   return (

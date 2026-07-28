@@ -58,19 +58,25 @@ export function MediaInput({
     const safe = file.name.replace(/[^a-zA-Z0-9._-]/g, "-").slice(-40);
     const path = `${crypto.randomUUID().slice(0, 8)}-${safe}`;
 
-    const { error: upErr } = await supabase.storage
-      .from(MEDIA_BUCKET)
-      .upload(path, file, { cacheControl: "31536000", upsert: false });
+    try {
+      const { error: upErr } = await supabase.storage
+        .from(MEDIA_BUCKET)
+        .upload(path, file, { cacheControl: "31536000", upsert: false });
 
-    if (upErr) {
+      if (upErr) {
+        setError(upErr.message);
+        return;
+      }
+
+      const { data } = supabase.storage.from(MEDIA_BUCKET).getPublicUrl(path);
+      onChange({ url: data.publicUrl, isVideo: video });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      // Always clears — a thrown upload must not strand the button on
+      // "Uploading…" with no way to retry.
       setBusy(false);
-      setError(upErr.message);
-      return;
     }
-
-    const { data } = supabase.storage.from(MEDIA_BUCKET).getPublicUrl(path);
-    setBusy(false);
-    onChange({ url: data.publicUrl, isVideo: video });
   }
 
   const looksVideo = value ? /\.(mp4|webm|mov|m4v)(\?|$)/i.test(value) : false;
