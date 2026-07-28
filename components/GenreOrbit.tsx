@@ -46,15 +46,24 @@ export function GenreOrbit({
   const angleRef = useRef(-90);
   const pausedRef = useRef(false);
 
+  const count = items.length;
+
   useEffect(() => {
     const wrap = wrapRef.current;
     if (!wrap) return;
+
+    // Drop refs left behind by removed genres. React nulls the slot but never
+    // shortens the array, so without this a deleted genre keeps its share of
+    // the circle and the ring is left with a gap where it used to be.
+    nodesRef.current.length = count;
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const place = () => {
       const r = wrap.clientWidth * RADIUS;
-      const n = nodesRef.current.length || 1;
+      // Spacing comes from how many genres there are, not from how many ref
+      // slots happen to exist.
+      const n = count || 1;
       nodesRef.current.forEach((el, i) => {
         if (!el) return;
         const rad = (((i / n) * 360 + angleRef.current) * Math.PI) / 180;
@@ -89,7 +98,7 @@ export function GenreOrbit({
       if (raf) cancelAnimationFrame(raf);
       window.removeEventListener("resize", place);
     };
-  }, [items.length]);
+  }, [count]);
 
   return (
     <div
@@ -137,7 +146,10 @@ export function GenreOrbit({
           // its centre is the disc's centre — otherwise the depth scale would
           // pull each record off the circle by a different amount.
           <li
-            key={g.name}
+            // Keyed by position, not name: a record's identity here *is* its
+            // slot on the ring, and two freshly-added genres both start with a
+            // blank name, which would collide as keys.
+            key={i}
             ref={(el) => {
               nodesRef.current[i] = el;
             }}
